@@ -99,14 +99,14 @@ defmodule Pigeon.FCM.Notification do
       iex> Pigeon.FCM.Notification.new("reg ID")
       %Pigeon.FCM.Notification{
         payload: %{},
-        registration_id: "reg ID",
+        registration_id: ["reg ID"],
         priority: :normal
       }
 
       iex> Pigeon.FCM.Notification.new("reg ID", %{"body" => "test message"})
       %Pigeon.FCM.Notification{
         payload: %{"notification" => %{"body" => "test message"}},
-        registration_id: "reg ID",
+        registration_id: ["reg ID"],
         priority: :normal
       }
 
@@ -117,8 +117,15 @@ defmodule Pigeon.FCM.Notification do
           "data" => %{"key" => "value"},
           "notification" => %{"body" => "test message"}
         },
-        registration_id: "reg ID",
+        registration_id: ["reg ID"],
         priority: :normal
+      }
+
+      iex> Pigeon.FCM.Notification.new(nil)
+      %Pigeon.FCM.Notification{
+      payload: %{},
+      registration_id: [],
+      priority: :normal
       }
 
       iex> regids = Enum.map(0..1_499, fn(_x) -> "reg ID" end)
@@ -143,7 +150,7 @@ defmodule Pigeon.FCM.Notification do
     |> put_data(data)
   end
 
-  def new(reg_ids, notification, data) do
+  def new(reg_ids, notification, data) when is_list(reg_ids) do
     reg_ids
     |> chunk(@chunk_size, @chunk_size, [])
     |> Enum.map(&new(&1, notification, data))
