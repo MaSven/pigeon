@@ -15,7 +15,8 @@ defmodule Pigeon.FCM.Notification do
             response: [],
             restricted_package_name: nil,
             status: nil,
-            time_to_live: 2_419_200
+            time_to_live: 2_419_200,
+            to: nil
 
   alias Pigeon.FCM.Notification
 
@@ -32,7 +33,8 @@ defmodule Pigeon.FCM.Notification do
           response: [] | [regid_response, ...],
           restricted_package_name: nil | String.t(),
           status: status | nil,
-          time_to_live: non_neg_integer
+          time_to_live: non_neg_integer,
+          to: String.t()
         }
 
   @typedoc ~S"""
@@ -347,6 +349,9 @@ defmodule Pigeon.FCM.Notification do
   """
   def put_condition(n, condition) when is_binary(condition),
     do: %{n | condition: condition}
+
+  def put_to(n, to) when is_binary(to),
+    do: %{n | to: to}
 
   defp update_payload(notification, _key, value) when value == %{},
     do: notification
