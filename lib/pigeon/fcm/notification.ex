@@ -463,6 +463,7 @@ defimpl Pigeon.Encodable, for: Pigeon.FCM.Notification do
     |> encode_attr("content_available", notif.content_available)
     |> encode_attr("mutable_content", notif.mutable_content)
     |> encode_attr("condition", notif.condition)
+    |> encode_attr("to", notif.to)
     |> Poison.encode!()
   end
 
