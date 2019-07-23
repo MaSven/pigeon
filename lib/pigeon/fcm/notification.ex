@@ -131,7 +131,7 @@ defmodule Pigeon.FCM.Notification do
   """
   def new(registration_ids, notification \\ %{}, data \\ %{})
 
-  def new(reg_id, notification, data) when is_binary(reg_id) do
+  def new(reg_id, notification, data) when is_binary(reg_id) or is_nil(reg_id) do
     %Pigeon.FCM.Notification{registration_id: List.wrap(reg_id)}
     |> put_notification(notification)
     |> put_data(data)
