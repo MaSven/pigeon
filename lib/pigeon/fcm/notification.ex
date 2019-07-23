@@ -144,7 +144,7 @@ defmodule Pigeon.FCM.Notification do
     |> put_data(data)
   end
 
-  def new(reg_ids, notification, data) when length(reg_ids) < 1001 do
+  def new(reg_ids, notification, data) when length(reg_ids) < 1001 and is_list(reg_ids) do
     %Pigeon.FCM.Notification{registration_id: reg_ids}
     |> put_notification(notification)
     |> put_data(data)
