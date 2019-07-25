@@ -157,6 +157,15 @@ defimpl Pigeon.Configurable, for: Pigeon.FCM.Config do
     ResultParser.parse(ids, results, on_response, notification)
   end
 
+  def parse_result(
+        ids,
+        %{"message_id" => _message_id} = message_ids,
+        on_response,
+        notification
+      ) do
+    ResultParser.parse(ids, List.wrap(message_ids), on_response, notification)
+  end
+
   def parse_error(data) do
     case Poison.decode(data) do
       {:ok, response} ->

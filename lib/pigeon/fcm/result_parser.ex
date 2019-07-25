@@ -11,25 +11,32 @@ defmodule Pigeon.FCM.ResultParser do
     parse([regid], results, on_response, notif)
   end
 
+  def parse([regid], result, on_response, notif) when is_map(result) do
+    updated_notif = update_notif(regid, result, on_response, notif)
+    parse([], [], on_response, updated_notif)
+  end
+
   def parse([regid | reg_res], [result | rest_results], on_response, notif) do
-    updated_notif =
-      case result do
-        %{"message_id" => id, "registration_id" => new_regid} ->
-          notif
-          |> put_update(regid, new_regid)
-          |> Map.put(:message_id, id)
-
-        %{"message_id" => id} ->
-          notif
-          |> put_success(regid)
-          |> Map.put(:message_id, id)
-
-        %{"error" => error} ->
-          notif
-          |> put_error(regid, error)
-      end
-
+    updated_notif = update_notif(regid, result, on_response, notif)
     parse(reg_res, rest_results, on_response, updated_notif)
+  end
+
+  def update_notif(regid, result, on_response, notif) do
+    case result do
+      %{"message_id" => id, "registration_id" => new_regid} ->
+        notif
+        |> put_update(regid, new_regid)
+        |> Map.put(:message_id, id)
+
+      %{"message_id" => id} ->
+        notif
+        |> put_success(regid)
+        |> Map.put(:message_id, id)
+
+      %{"error" => error} ->
+        notif
+        |> put_error(regid, error)
+    end
   end
 
   defp put_update(%{response: resp} = notif, regid, new_regid) do

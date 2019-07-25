@@ -18,6 +18,17 @@ defmodule Pigeon.FCM.ResultParserTest do
     )
   end
 
+  test "parse_result with success of topic" do
+    expected = [success: "/topics/messages"]
+
+    ResultParser.parse(
+      "/topics/messages",
+      %{"message_id" => 9_115_808_683_463_109_277},
+      &assert_response(&1, expected),
+      %Notification{}
+    )
+  end
+
   test "parse_result with single non-list regid" do
     expected = [success: "regid"]
 
