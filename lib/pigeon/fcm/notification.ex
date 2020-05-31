@@ -138,7 +138,7 @@ defmodule Pigeon.FCM.Notification do
   """
   def new(registration_ids, notification \\ %{}, data \\ %{})
 
-  def new(nil,notification,data) do
+  def new(nil, notification, data) do
     %Pigeon.FCM.Notification{}
     |> put_notification(notification)
     |> put_data(data)
@@ -443,17 +443,13 @@ defimpl Pigeon.Encodable, for: Pigeon.FCM.Notification do
     encode_requests(notif)
   end
 
-
- 
-
   @doc false
   def encode_requests(%{registration_id: regid} = notif)
       when is_binary(regid) do
     encode_requests(%{notif | registration_id: [regid]})
   end
 
-def encode_requests(%{registration_id: nil} = notif)  do
-
+  def encode_requests(%{registration_id: nil} = notif) do
     notif.payload
     |> encode_attr("priority", to_string(notif.priority))
     |> encode_attr("time_to_live", notif.time_to_live)
@@ -467,7 +463,7 @@ def encode_requests(%{registration_id: nil} = notif)  do
     |> Poison.encode!()
   end
 
-  def encode_requests(%{registration_id: regid} = notif) when is_list(regid)  do
+  def encode_requests(%{registration_id: regid} = notif) when is_list(regid) do
     regid
     |> recipient_attr()
     |> Map.merge(notif.payload)

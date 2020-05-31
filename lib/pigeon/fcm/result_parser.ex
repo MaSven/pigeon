@@ -7,6 +7,12 @@ defmodule Pigeon.FCM.ResultParser do
     process_on_response(on_response, notif)
   end
 
+  # topic was sent
+  def parse(nil, results, on_response, notif) do
+    updated_notif = update_notif(nil, results, on_response, notif)
+    parse([], [], on_response, updated_notif)
+  end
+
   def parse(regid, results, on_response, notif) when is_binary(regid) do
     parse([regid], results, on_response, notif)
   end
@@ -41,6 +47,11 @@ defmodule Pigeon.FCM.ResultParser do
 
   defp put_update(%{response: resp} = notif, regid, new_regid) do
     new_resp = [{:update, {regid, new_regid}} | resp]
+    %{notif | response: new_resp}
+  end
+
+  defp put_success(%{response: resp} = notif, nil) do
+    new_resp = [{:success, ""} | resp]
     %{notif | response: new_resp}
   end
 
