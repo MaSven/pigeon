@@ -443,13 +443,31 @@ defimpl Pigeon.Encodable, for: Pigeon.FCM.Notification do
     encode_requests(notif)
   end
 
+
+ 
+
   @doc false
   def encode_requests(%{registration_id: regid} = notif)
       when is_binary(regid) do
     encode_requests(%{notif | registration_id: [regid]})
   end
 
-  def encode_requests(%{registration_id: regid} = notif) when is_list(regid) do
+def encode_requests(%{registration_id: nil} = notif)  do
+
+    notif.payload
+    |> encode_attr("priority", to_string(notif.priority))
+    |> encode_attr("time_to_live", notif.time_to_live)
+    |> encode_attr("collapse_key", notif.collapse_key)
+    |> encode_attr("restricted_package_name", notif.restricted_package_name)
+    |> encode_attr("dry_run", notif.dry_run)
+    |> encode_attr("content_available", notif.content_available)
+    |> encode_attr("mutable_content", notif.mutable_content)
+    |> encode_attr("condition", notif.condition)
+    |> encode_attr("to", notif.to)
+    |> Poison.encode!()
+  end
+
+  def encode_requests(%{registration_id: regid} = notif) when is_list(regid)  do
     regid
     |> recipient_attr()
     |> Map.merge(notif.payload)
