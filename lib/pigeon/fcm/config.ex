@@ -173,6 +173,11 @@ defimpl Pigeon.Configurable, for: Pigeon.FCM.Config do
     ResultParser.parse(ids, results, on_response, notification)
   end
 
+  def parse_result(id, %{"message_id" => _} = result, on_response, notification)
+      when is_binary(id) do
+    parse_result([id], %{"results" => [result]}, on_response, notification)
+  end
+
   def parse_result(
         ids,
         %{"message_id" => _message_id} = message_ids,
