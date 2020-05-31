@@ -21,7 +21,7 @@ defmodule Pigeon.FCM.ResultParser do
     parse(reg_res, rest_results, on_response, updated_notif)
   end
 
-  def update_notif(regid, result, on_response, notif) do
+  def update_notif(regid, result, _on_response, notif) do
     case result do
       %{"message_id" => id, "registration_id" => new_regid} ->
         notif
