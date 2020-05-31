@@ -29,7 +29,7 @@ defmodule Pigeon.FCM.Notification do
           mutable_content: boolean,
           payload: map,
           priority: :normal | :high,
-          registration_id: String.t() | [String.t()],
+          registration_id: String.t() | [String.t()] | nil,
           response: [] | [regid_response, ...],
           restricted_package_name: nil | String.t(),
           status: status | nil,
@@ -138,8 +138,14 @@ defmodule Pigeon.FCM.Notification do
   """
   def new(registration_ids, notification \\ %{}, data \\ %{})
 
-  def new(reg_id, notification, data) when is_binary(reg_id) or is_nil(reg_id) do
-    %Pigeon.FCM.Notification{registration_id: List.wrap(reg_id)}
+  def new(nil,notification,data) do
+    %Pigeon.FCM.Notification{}
+    |> put_notification(notification)
+    |> put_data(data)
+  end
+
+  def new(reg_id, notification, data) when is_binary(reg_id) do
+    %Pigeon.FCM.Notification{registration_id: reg_id}
     |> put_notification(notification)
     |> put_data(data)
   end
