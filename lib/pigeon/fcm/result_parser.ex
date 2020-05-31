@@ -8,7 +8,7 @@ defmodule Pigeon.FCM.ResultParser do
   end
 
   # topic was sent
-  def parse(nil, results, on_response, notif) do
+  def parse(nil, [results], on_response, notif) do
     updated_notif = update_notif(nil, results, on_response, notif)
     parse([], [], on_response, updated_notif)
   end
